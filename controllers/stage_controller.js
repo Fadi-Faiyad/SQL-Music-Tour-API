@@ -1,21 +1,29 @@
 const stages = require('express').Router()
 const { json } = require('sequelize')
 const db = require('../models')
-const { Stage } = db
+const { Stage, SetTime } = db
 
 
 stages.get('/', async (req, res) => {
     try{
-        const foundStages = Stage.findAll()
+        const foundStages = await Stage.findAll({
+            include: [
+                {
+                    model: SetTime,
+                    as: 'set_times'
+                }
+            ]
+        })
         res.status(200).json(foundStages)
     }catch(error){
+        console.log(error)
         res.status(500),json(error)
     }
 })
 
 stages.get('/:id', async (req, res) => {
     try{
-        const foundStage = Stage.findOne();
+        const foundStage = await Stage.findOne();
         res.status(200).json(foundStage)
     }catch(error){
         res.status(500).json(error)
@@ -24,7 +32,7 @@ stages.get('/:id', async (req, res) => {
 
 stages.post('/', async (req, res) => {
     try{
-        const newStage = Stage.create(req.body);
+        const newStage = await Stage.create(req.body);
         res.status(200).json({
             message: 'lets gooooo',
             data: newStage

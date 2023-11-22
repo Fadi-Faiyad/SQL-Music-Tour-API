@@ -1,12 +1,25 @@
 'use strict';
 // DEPENDENCIES
 const { Model } = require('sequelize');
+const setTime = require('../migrations/set-time');
 
 // MODEL
 module.exports = (sequelize, DataTypes) => {
   class Band extends Model {
-    static associate(models) {
+    
+    
+
+
+    static associate({ MeetGreet, SetTime }) {
       // define association here
+      Band.hasMany(MeetGreet, {
+        foreignKey: "band_id",
+        as: 'meet_greets'
+      }),
+      Band.hasMany(SetTime, {
+        foreignKey: "band_id",
+        as: 'set_times'
+      })
     }
   }
 
